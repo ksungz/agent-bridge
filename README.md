@@ -1,5 +1,7 @@
 # agent-bridge
 
+[![CI](https://github.com/ksungz/agent-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ksungz/agent-bridge/actions/workflows/ci.yml)
+
 A local agent orchestration CLI for connecting multiple AI coding agents through shared task context, handoff briefs, and review workflows.
 
 Agent Bridge is not another model router. It does not proxy API calls or try to hide one provider behind another provider's interface.
@@ -202,6 +204,7 @@ Use a shorter `timeoutMs` in `.agent-bridge/agents.json` while developing the ad
 npm install
 npm run typecheck
 npm test
+npm pack --dry-run
 ```
 
 Tests use fake local agents, so they do not call real Claude Code, Codex, Gemini, or paid models.
