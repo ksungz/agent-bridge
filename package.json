@@ -1,0 +1,41 @@
+{
+  "name": "@ksungz/agent-bridge",
+  "version": "0.1.0",
+  "description": "A local agent orchestration CLI for connecting multiple AI coding agents through shared task context, handoff briefs, and review workflows.",
+  "type": "module",
+  "bin": {
+    "agent-bridge": "./dist/cli.js",
+    "ab": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepack": "npm run build",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "agent",
+    "cli",
+    "claude-code",
+    "codex",
+    "gemini",
+    "orchestration",
+    "handoff"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.19.4",
+    "typescript": "^5.8.3"
+  }
+}

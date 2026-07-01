@@ -1,0 +1,28 @@
+{
+  "agents": {
+    "claude": {
+      "command": "claude",
+      "args": ["--print", "{{prompt}}"],
+      "promptMode": "argument",
+      "description": "Claude Code non-interactive print mode"
+    },
+    "codex": {
+      "command": "codex",
+      "args": ["exec", "--skip-git-repo-check", "--sandbox", "read-only", "{{prompt}}"],
+      "promptMode": "argument",
+      "description": "Codex CLI non-interactive exec mode"
+    },
+    "gemini": {
+      "command": "gemini",
+      "args": ["--prompt", "{{prompt}}"],
+      "promptMode": "argument",
+      "description": "Gemini CLI non-interactive prompt mode"
+    },
+    "stdin-agent": {
+      "command": "node",
+      "args": ["./tools/stdin-agent.mjs"],
+      "promptMode": "stdin",
+      "description": "Example custom stdin-based agent"
+    }
+  }
+}
