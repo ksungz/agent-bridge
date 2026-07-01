@@ -4,6 +4,8 @@
 
 A local agent orchestration CLI for connecting multiple AI coding agents through shared task context, handoff briefs, and review workflows.
 
+![Agent Bridge terminal demo](docs/demo.svg)
+
 Agent Bridge is not another model router. It does not proxy API calls or try to hide one provider behind another provider's interface.
 
 It is a thin local coordination layer for people who already use tools such as Claude Code, Codex CLI, Gemini CLI, custom internal agents, or any other command-line agent. Agent Bridge keeps the task context, decisions, run history, and handoff briefs in one workspace so each agent can work from the same source of truth.
@@ -37,6 +39,15 @@ Agent Bridge gives the workflow a simple filesystem-backed shape:
 
 ## Install
 
+Use directly from GitHub:
+
+```bash
+npm install github:ksungz/agent-bridge
+npx agent-bridge help
+```
+
+For local development:
+
 ```bash
 npm install
 npm run build
@@ -49,6 +60,25 @@ Then use either command:
 agent-bridge help
 ab help
 ```
+
+## Try It In 60 Seconds
+
+Create a task, ask one agent, then generate a handoff brief:
+
+```bash
+agent-bridge init "Ship safer agent work"
+agent-bridge agents
+agent-bridge ask codex "Review the current plan and point out weak assumptions."
+agent-bridge handoff codex
+```
+
+Run multiple agents against the same task context:
+
+```bash
+agent-bridge review "Find blind spots before I continue." --agents=claude,codex,gemini
+```
+
+Everything is written under `.agent-bridge/` so the next agent sees the same goal, shared context, decisions, run history, reviews, and handoff briefs.
 
 ## Quick Start
 
