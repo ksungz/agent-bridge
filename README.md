@@ -4,7 +4,10 @@
 
 이미 로그인해 사용하는 여러 AI 코딩 도구를 한 작업 공간에서 함께 사용하도록 연결하는 로컬 CLI입니다.
 
-![Agent Bridge terminal demo](docs/demo.svg)
+![Agent Bridge가 작업을 만들고 여러 AI CLI의 리뷰와 인계 문서를 남기는 흐름](docs/demo.gif)
+
+GIF는 `init → agents → review → handoff` 순서로 한 작업을 만들고,
+여러 AI CLI의 결과와 다음 도구에 전달할 내용을 같은 작업 폴더에 남기는 흐름을 보여줍니다.
 
 ## 왜 만들었나요?
 
