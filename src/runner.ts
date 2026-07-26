@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import os from "node:os";
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
 import { BridgeError } from "./errors.js";
@@ -152,7 +153,7 @@ async function writeRunRecord(paths: TaskPaths, record: RunRecord): Promise<void
     ""
   ].join("\n");
 
-  await writeFile(filePath, body, "utf8");
+  await writeFile(filePath, redactHomeDirectory(body), "utf8");
 }
 
 function shellQuote(value: string): string {
@@ -161,4 +162,13 @@ function shellQuote(value: string): string {
   }
 
   return `'${value.replaceAll("'", "'\\''")}'`;
+}
+
+function redactHomeDirectory(value: string): string {
+  const homeDirectory = os.homedir();
+  if (!homeDirectory || homeDirectory === path.parse(homeDirectory).root) {
+    return value;
+  }
+
+  return value.replaceAll(homeDirectory, "$HOME");
 }

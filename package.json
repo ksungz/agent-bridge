@@ -1,6 +1,6 @@
 {
   "name": "@ksungz/agent-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A subscription-native local CLI for coordinating authenticated AI coding agents through shared task context, reviews, and handoffs.",
   "type": "module",
   "bin": {

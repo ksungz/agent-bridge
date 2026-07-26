@@ -1,6 +1,7 @@
 # Agent Bridge
 
 [![CI](https://github.com/ksungz/agent-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ksungz/agent-bridge/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ksungz/agent-bridge)](https://github.com/ksungz/agent-bridge/releases/latest)
 
 이미 로그인해 사용하는 여러 AI 코딩 도구를 한 작업 공간에서 함께 사용하도록 연결하는 로컬 CLI입니다.
 
@@ -103,6 +104,14 @@ agent-bridge handoff codex
 
 일반 파일로 저장되므로 어떤 요청이 실행됐고 어떤 결정이 남았는지 직접 확인할 수 있습니다.
 
+### 기록을 공유하기 전에
+
+Agent Bridge는 작업 재현을 위해 프롬프트와 명령, stdout·stderr, 결정과 인계 내용을 로컬 파일에 저장합니다.
+현재 사용자의 홈 디렉터리 절대 경로는 저장할 때 `$HOME`으로 바꾸지만,
+프롬프트와 실행 결과에 포함된 다른 민감정보까지 자동으로 판별하거나 제거하지는 않습니다.
+
+`.agent-bridge` 폴더를 커밋하거나 다른 사람에게 전달하기 전에는 기록 내용을 직접 확인해야 합니다.
+
 ## 주요 명령
 
 ```bash
@@ -161,6 +170,13 @@ npm pack --dry-run
 ```
 
 테스트는 가짜 로컬 에이전트를 사용하므로 실제 Claude Code, Codex, Gemini나 유료 API를 호출하지 않습니다.
+
+2026년 7월에는 새 임시 작업 공간에서 GitHub 설치부터 로그인된 Codex CLI 실행,
+실행 기록과 인계 문서 생성까지 다시 검증했습니다.
+이 과정에서 발견한 홈 디렉터리 경로 노출을 `v0.1.1`에서 마스킹했습니다.
+
+- [자체 검증 기록](docs/validation.md)
+- [경로 마스킹 개선 Issue #1](https://github.com/ksungz/agent-bridge/issues/1)
 
 ## 라이선스
 

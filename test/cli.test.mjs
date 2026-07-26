@@ -125,6 +125,42 @@ test("ask supports stdin-mode adapters without a prompt placeholder", async () =
   assert.match(result.stdout, /STDIN_HAS_REQUEST:true/);
 });
 
+test("run records and handoffs mask the current home directory", async () => {
+  const cwd = await makeWorkspace();
+  await run(["init", "Check stored paths"], cwd);
+
+  const fakeAgent = path.join(cwd, "fake-path-agent.mjs");
+  await writeFile(
+    fakeAgent,
+    "console.log('stdout-home:' + process.env.HOME); console.error('stderr-home:' + process.env.HOME);\n",
+    "utf8"
+  );
+  await writeFile(
+    path.join(cwd, ".agent-bridge", "agents.json"),
+    JSON.stringify({ agents: { fake: { command: "node", args: [fakeAgent], promptMode: "stdin" } } }, null, 2),
+    "utf8"
+  );
+
+  await run(["ask", "fake", `Review ${os.homedir()}/project`], cwd);
+
+  const state = JSON.parse(await readFile(path.join(cwd, ".agent-bridge", "state.json"), "utf8"));
+  const taskDir = path.join(cwd, ".agent-bridge", "tasks", state.activeTask);
+  const runs = await readdir(path.join(taskDir, "runs"));
+  const runBody = await readFile(path.join(taskDir, "runs", runs[0]), "utf8");
+
+  assert.equal(runBody.includes(os.homedir()), false);
+  assert.match(runBody, /\$HOME\/project/);
+  assert.match(runBody, /stdout-home:\$HOME/);
+  assert.match(runBody, /stderr-home:\$HOME/);
+
+  await run(["handoff", "codex"], cwd);
+  const handoffs = await readdir(path.join(taskDir, "handoffs"));
+  const handoff = await readFile(path.join(taskDir, "handoffs", handoffs[0]), "utf8");
+
+  assert.equal(handoff.includes(os.homedir()), false);
+  assert.match(handoff, /\$HOME/);
+});
+
 test("handoff writes a brief with goal, decisions, and recent runs", async () => {
   const cwd = await makeWorkspace();
   await run(["init", "Prepare release"], cwd);
