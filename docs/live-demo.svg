@@ -1,0 +1,39 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Bridge 실제 CLI 실행 화면</title>
+  <desc id="desc">공개 샘플 작업에서 Agent Bridge로 작업을 만들고, 로그인된 Codex CLI를 실행한 뒤, 실행 기록과 인계 문서를 생성한 결과입니다.</desc>
+
+  <rect width="1200" height="760" rx="24" fill="#0d1117"/>
+  <rect x="28" y="28" width="1144" height="704" rx="16" fill="#161b22" stroke="#30363d"/>
+
+  <circle cx="58" cy="58" r="7" fill="#ff5f56"/>
+  <circle cx="82" cy="58" r="7" fill="#ffbd2e"/>
+  <circle cx="106" cy="58" r="7" fill="#27c93f"/>
+  <text x="136" y="64" fill="#8b949e" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16">agent-bridge · actual CLI run</text>
+  <rect x="895" y="43" width="236" height="30" rx="15" fill="#1f6feb"/>
+  <text x="1013" y="63" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="700">PUBLIC SAMPLE WORKSPACE</text>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17">
+    <text x="58" y="118" fill="#7ee787">$ agent-bridge init "AX 도입 계획 검토"</text>
+    <text x="58" y="150" fill="#c9d1d9">Initialized Agent Bridge</text>
+    <text x="58" y="180" fill="#c9d1d9">Active task: 20260726T104403Z-ax</text>
+
+    <text x="58" y="236" fill="#7ee787">$ agent-bridge agents</text>
+    <text x="58" y="268" fill="#c9d1d9">claude   Claude Code non-interactive print mode</text>
+    <text x="58" y="298" fill="#c9d1d9">codex    Codex CLI non-interactive exec mode</text>
+    <text x="58" y="328" fill="#c9d1d9">gemini   Gemini CLI non-interactive prompt mode</text>
+
+    <text x="58" y="384" fill="#7ee787">$ agent-bridge ask codex "도입 전 가장 중요한 검증 1개"</text>
+    <text x="58" y="416" fill="#c9d1d9">Run recorded: 20260726T104410Z-codex</text>
+    <text x="58" y="452" fill="#8b949e">Codex response excerpt</text>
+    <text x="58" y="482" fill="#f0f6fc">운영권한 변경에 대한 e2e 검증이 공개 데모 체크리스트에서 누락됨.</text>
+    <text x="58" y="512" fill="#f0f6fc">조치: 권한승격·철회·감사로그 테스트를 론치 게이트로 추가.</text>
+
+    <text x="58" y="568" fill="#7ee787">$ agent-bridge handoff codex</text>
+    <text x="58" y="600" fill="#c9d1d9">Handoff written: .agent-bridge/tasks/.../handoffs/...-codex.md</text>
+  </g>
+
+  <rect x="58" y="638" width="1084" height="60" rx="10" fill="#21262d"/>
+  <text x="84" y="664" fill="#58a6ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">CREATED</text>
+  <text x="172" y="664" fill="#c9d1d9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">goal.md · runs/ · reviews/ · handoffs/</text>
+  <text x="84" y="685" fill="#8b949e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">2026-07-26 실제 Codex CLI 연결 실행 · 사용자 파일이 없는 공개 샘플 작업</text>
+</svg>

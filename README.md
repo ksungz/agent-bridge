@@ -4,10 +4,21 @@
 
 이미 로그인해 사용하는 여러 AI 코딩 도구를 한 작업 공간에서 함께 사용하도록 연결하는 로컬 CLI입니다.
 
+![Agent Bridge로 공개 샘플 작업을 만들고 Codex CLI 실행 기록과 인계 문서를 생성한 실제 화면](docs/live-demo.png)
+
+위 화면은 2026년 7월 26일 사용자 파일이 없는 공개 샘플 작업에서 현재 소스를 빌드한 뒤,
+Agent Bridge로 로그인된 Codex CLI를 실제 실행해 만든 기록입니다.
+`ask`가 실행 결과를 저장하고 `handoff`가 다음 도구에 전달할 문서를 만드는 흐름을 확인할 수 있습니다.
+
+<details>
+<summary><strong>전체 명령 흐름 요약 GIF 보기</strong></summary>
+
 ![Agent Bridge가 작업을 만들고 여러 AI CLI의 리뷰와 인계 문서를 남기는 흐름](docs/demo.gif)
 
-GIF는 `init → agents → review → handoff` 순서로 한 작업을 만들고,
-여러 AI CLI의 결과와 다음 도구에 전달할 내용을 같은 작업 폴더에 남기는 흐름을 보여줍니다.
+`init → agents → review → handoff` 순서로 한 작업을 만들고,
+여러 AI CLI의 결과와 다음 도구에 전달할 내용을 같은 작업 폴더에 남기는 흐름을 요약했습니다.
+
+</details>
 
 ## 왜 만들었나요?
 
