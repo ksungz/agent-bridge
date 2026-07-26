@@ -1,7 +1,7 @@
 {
   "name": "@ksungz/agent-bridge",
   "version": "0.1.0",
-  "description": "A local agent orchestration CLI for connecting multiple AI coding agents through shared task context, handoff briefs, and review workflows.",
+  "description": "A subscription-native local CLI for coordinating authenticated AI coding agents through shared task context, reviews, and handoffs.",
   "type": "module",
   "bin": {
     "agent-bridge": "./dist/cli.js",

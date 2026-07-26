@@ -1,26 +1,76 @@
-# agent-bridge
+# Agent Bridge
 
 [![CI](https://github.com/ksungz/agent-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ksungz/agent-bridge/actions/workflows/ci.yml)
 
-A local agent orchestration CLI for connecting multiple AI coding agents through shared task context, handoff briefs, and review workflows.
+이미 로그인해 사용하는 여러 AI 코딩 도구를 한 작업 공간에서 함께 사용하도록 연결하는 로컬 CLI입니다.
 
 ![Agent Bridge terminal demo](docs/demo.svg)
 
-Agent Bridge is not another model router. It does not proxy API calls or try to hide one provider behind another provider's interface.
+## 왜 만들었나요?
 
-It is a thin local coordination layer for people who already use tools such as Claude Code, Codex CLI, Gemini CLI, custom internal agents, or any other command-line agent. Agent Bridge keeps the task context, decisions, run history, and handoff briefs in one workspace so each agent can work from the same source of truth.
+Claude Code, Codex, Gemini CLI처럼 구독하고 로그인해서 사용하는 AI 코딩 도구가 여러 개 있어도,
+하나의 작업에 함께 사용하려면 요청과 결과를 터미널 사이에서 직접 옮겨야 했습니다.
 
-## Why
+Agent Bridge는 이 도구들을 API 키 기반의 모델 라우터로 바꾸지 않습니다.
+각 CLI의 기존 로그인과 결제 방식은 그대로 유지하고, 다음 정보만 공통 작업 폴더에서 관리합니다.
 
-Using multiple agents manually gets messy fast:
+- 이번 작업의 목표
+- 여러 도구가 함께 참고할 공통 맥락
+- 작업 중 확정한 결정
+- 각 도구의 실행 결과
+- 여러 도구의 리뷰 결과
+- 다음 도구에 전달할 인계 문서
 
-- each agent receives a slightly different version of the task
-- decisions disappear between sessions
-- review output is scattered across terminals
-- the next agent has to be briefed from scratch
-- nobody remembers which assumptions were already settled
+쉽게 말하면 **AI 모델을 하나로 합치는 도구가 아니라, 여러 AI 도구가 같은 작업 기록을 보며 이어서 일하게 만드는 연결 계층**입니다.
 
-Agent Bridge gives the workflow a simple filesystem-backed shape:
+## 어떻게 사용하나요?
+
+### 1. 설치
+
+GitHub에서 바로 설치할 수 있습니다.
+
+```bash
+npm install github:ksungz/agent-bridge
+npx agent-bridge help
+```
+
+로컬에서 개발하려면 다음 명령을 사용합니다.
+
+```bash
+npm install
+npm run build
+npm link
+```
+
+설치 후 `agent-bridge` 또는 짧은 명령인 `ab`를 사용할 수 있습니다.
+
+### 2. 작업 만들기
+
+```bash
+agent-bridge init "포트폴리오 최종 검토"
+```
+
+프로젝트 안에 `.agent-bridge` 작업 폴더가 만들어집니다.
+
+### 3. 한 AI 도구에 요청하기
+
+```bash
+agent-bridge ask codex "현재 계획에서 빠진 위험을 검토해줘."
+```
+
+### 4. 여러 AI 도구로 같은 내용을 검토하기
+
+```bash
+agent-bridge review "구현 전에 놓친 부분을 찾아줘." --agents=claude,codex,gemini
+```
+
+### 5. 다음 도구를 위한 인계 문서 만들기
+
+```bash
+agent-bridge handoff codex
+```
+
+## 무엇이 기록되나요?
 
 ```text
 .agent-bridge/
@@ -28,7 +78,7 @@ Agent Bridge gives the workflow a simple filesystem-backed shape:
   agents.json
   state.json
   tasks/
-    20260702T120000Z-my-task/
+    <task-id>/
       goal.md
       shared-context.md
       decisions.md
@@ -37,198 +87,57 @@ Agent Bridge gives the workflow a simple filesystem-backed shape:
       handoffs/
 ```
 
-## Install
+일반 파일로 저장되므로 어떤 요청이 실행됐고 어떤 결정이 남았는지 직접 확인할 수 있습니다.
 
-Use directly from GitHub:
-
-```bash
-npm install github:ksungz/agent-bridge
-npx agent-bridge help
-```
-
-For local development:
+## 주요 명령
 
 ```bash
-npm install
-npm run build
-npm link
-```
-
-Then use either command:
-
-```bash
-agent-bridge help
-ab help
-```
-
-## Try It In 60 Seconds
-
-Create a task, ask one agent, then generate a handoff brief:
-
-```bash
-agent-bridge init "Ship safer agent work"
-agent-bridge agents
-agent-bridge ask codex "Review the current plan and point out weak assumptions."
-agent-bridge handoff codex
-```
-
-Run multiple agents against the same task context:
-
-```bash
-agent-bridge review "Find blind spots before I continue." --agents=claude,codex,gemini
-```
-
-Everything is written under `.agent-bridge/` so the next agent sees the same goal, shared context, decisions, run history, reviews, and handoff briefs.
-
-## Quick Start
-
-Initialize a task in any project:
-
-```bash
-agent-bridge init "Improve portfolio review flow"
-```
-
-Edit the shared task files:
-
-```text
-.agent-bridge/tasks/<task-id>/goal.md
-.agent-bridge/tasks/<task-id>/shared-context.md
-.agent-bridge/tasks/<task-id>/decisions.md
-```
-
-List configured agents:
-
-```bash
-agent-bridge agents
-```
-
-Ask one agent:
-
-```bash
-agent-bridge ask codex "Review the current plan and point out weak assumptions."
-```
-
-Run a multi-agent review:
-
-```bash
-agent-bridge review "Compare the implementation risks and next steps." --agents=claude,codex,gemini
-```
-
-Create a handoff brief:
-
-```bash
-agent-bridge handoff codex
-```
-
-Get workspace status:
-
-```bash
-agent-bridge digest
-```
-
-## Agent Adapters
-
-Adapters are plain JSON. They live in `.agent-bridge/agents.json`.
-
-Default adapters:
-
-```json
-{
-  "agents": {
-    "claude": {
-      "command": "claude",
-      "args": ["--print", "{{prompt}}"],
-      "promptMode": "argument"
-    },
-    "codex": {
-      "command": "codex",
-      "args": ["exec", "--skip-git-repo-check", "--sandbox", "read-only", "{{prompt}}"],
-      "promptMode": "argument"
-    },
-    "gemini": {
-      "command": "gemini",
-      "args": ["--prompt", "{{prompt}}"],
-      "promptMode": "argument"
-    }
-  }
-}
-```
-
-Any CLI can be attached:
-
-```json
-{
-  "agents": {
-    "local-reviewer": {
-      "command": "node",
-      "args": ["./tools/local-reviewer.mjs"],
-      "promptMode": "stdin"
-    }
-  }
-}
-```
-
-Use `{{prompt}}` when the agent expects a prompt argument. Use `promptMode: "stdin"` when the agent should receive the built task prompt over stdin.
-
-Agent Bridge does not manage provider login or billing. Each configured CLI must already work in your local terminal.
-
-## Commands
-
-```bash
-agent-bridge init <task name>
+agent-bridge init <작업 이름>
 agent-bridge agents
 agent-bridge task list
-agent-bridge task use <task-id>
-agent-bridge ask <agent> <prompt> [--dry-run]
-agent-bridge review <prompt> [--agents=a,b] [--dry-run]
-agent-bridge handoff [target-agent]
+agent-bridge task use <작업 ID>
+agent-bridge ask <도구> <요청>
+agent-bridge review <요청> --agents=claude,codex,gemini
+agent-bridge handoff [다음 도구]
 agent-bridge digest
 ```
 
-## Design Principles
+## 다른 AI CLI 연결하기
 
-- Keep provider CLIs independent. Agent Bridge coordinates local tools; it does not impersonate providers.
-- Keep task memory explicit. Goal, context, decisions, runs, reviews, and handoffs are regular files.
-- Keep adapters generic. Claude Code, Codex, and Gemini are defaults, not hard requirements.
-- Keep handoffs concrete. A handoff should show goal, context, decisions, recent runs, and next-agent instructions.
-- Keep automation honest. Runs are recorded with prompt, stdout, stderr, command, exit code, and duration.
-
-## Troubleshooting
-
-### The agent command fails with an auth error
-
-Run the provider CLI directly first:
-
-```bash
-claude --help
-codex exec --help
-gemini --help
-```
-
-Then verify the provider's own login or environment variables. Agent Bridge only spawns local commands; it does not create sessions, refresh tokens, or configure API keys.
-
-### Codex prints runtime logs
-
-Some CLIs print runtime diagnostics to stderr even when the final answer is valid. Agent Bridge records stdout and stderr as-is so the run history stays auditable.
-
-### A custom adapter hangs
-
-Use a shorter `timeoutMs` in `.agent-bridge/agents.json` while developing the adapter.
+연결할 도구는 `.agent-bridge/agents.json`에 JSON 형식으로 등록합니다.
 
 ```json
 {
   "agents": {
-    "custom": {
-      "command": "my-agent",
-      "args": ["run"],
-      "promptMode": "stdin",
-      "timeoutMs": 30000
+    "codex": {
+      "command": "codex",
+      "args": [
+        "exec",
+        "--skip-git-repo-check",
+        "--sandbox",
+        "read-only",
+        "{{prompt}}"
+      ],
+      "promptMode": "argument"
     }
   }
 }
 ```
 
-## Development
+프롬프트를 명령 인자로 받는 도구는 `{{prompt}}`를 사용하고,
+표준 입력으로 받는 도구는 `promptMode`를 `stdin`으로 설정합니다.
+
+## 하지 않는 일
+
+- AI 제공자의 로그인이나 결제를 대신 관리하지 않습니다.
+- API 호출을 중계하거나 특정 제공자를 다른 모델처럼 보이게 하지 않습니다.
+- 구독을 우회하거나 API 프록시를 제공하지 않습니다.
+- 아직 긴 맥락을 자동으로 압축하지 않습니다.
+- 아직 AI 도구마다 필요한 파일을 자동으로 골라 전달하지 않습니다.
+
+현재 버전은 여러 CLI를 실행하고 작업 목표, 결정, 결과, 리뷰와 인계 기록을 같은 위치에 남기는 기본 구조에 집중합니다.
+
+## 개발과 검증
 
 ```bash
 npm install
@@ -237,4 +146,8 @@ npm test
 npm pack --dry-run
 ```
 
-Tests use fake local agents, so they do not call real Claude Code, Codex, Gemini, or paid models.
+테스트는 가짜 로컬 에이전트를 사용하므로 실제 Claude Code, Codex, Gemini나 유료 API를 호출하지 않습니다.
+
+## 라이선스
+
+MIT
